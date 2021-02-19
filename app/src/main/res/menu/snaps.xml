@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Menu for creating snap -->
+    <item android:id="@+id/createSnap" android:title="Create Snap"></item>
+    <!-- Menu for logging out current account -->
+    <item android:id="@+id/logOut" android:title="Logout"></item>
+</menu>
