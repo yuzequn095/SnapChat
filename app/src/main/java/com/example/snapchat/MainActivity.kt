@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -82,6 +83,11 @@ class MainActivity : AppCompatActivity() {
                                 updateUI(user)
                                 */
                                 // add to database
+                                // reach the databse
+                                val database = FirebaseDatabase.getInstance()
+                                val myRef = database.getReference()
+                                // reach the further folder
+                                myRef.child("users").child(task.result!!.user?.uid!!).child("email").setValue(emailEditText?.text.toString())
                                 logIn()
                             } else {
                                  /*

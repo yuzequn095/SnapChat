@@ -139,6 +139,10 @@ class CreateSnapActivity : AppCompatActivity() {
 
             val downloadUrl = taskSnapshot.uploadSessionUri
             Log.i("URL", downloadUrl.toString())
+
+            // open choose user inteng
+            val intent = Intent(this, ChooseUserActivity::class.java)
+            startActivity(intent)
         }
     }
 
