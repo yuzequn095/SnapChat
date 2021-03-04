@@ -108,6 +108,7 @@ class CreateSnapActivity : AppCompatActivity() {
     }
     */
 
+    /**** Replaced by the below one
     fun nextClicked(view: View){
         // Get the data from an ImageView as bytes
         createSnapImageView?.isDrawingCacheEnabled = true
@@ -137,15 +138,76 @@ class CreateSnapActivity : AppCompatActivity() {
                 Log.i("URL   ",url)
             */
 
+            /*
             val downloadUrl = taskSnapshot.uploadSessionUri
             Log.i("URL", downloadUrl.toString())
 
-            // open choose user inteng
+            // open choose user intent
             val intent = Intent(this, ChooseUserActivity::class.java)
+
+            intent.putExtra("imageURL", downloadUrl.toString())
+            intent.putExtra("imageName", imageName)
+            intent.putExtra("message", messageEditText?.text.toString())
+
             startActivity(intent)
+            */
+
+
+            // Toast.makeText(this, "Success!!!", Toast.LENGTH_SHORT).show()
+            val taskSnapshot = uploadTask.snapshot.uploadSessionUri
+            val intent: Intent = Intent(this, ChooseUserActivity::class.java)
+            intent.putExtra("imageURL", taskSnapshot.toString())
+            intent.putExtra("imageName", imageName)
+            intent.putExtra("message", messageEditText?.text.toString())
+            startActivity(intent)
+
         }
     }
+    */
+    fun nextClicked(view: View) {
+        // Get the data from an ImageView as bytes
+        // Get the data from an ImageView as bytes
+        createSnapImageView?.setDrawingCacheEnabled(true)
+        createSnapImageView?.buildDrawingCache()
+        val bitmap = (createSnapImageView?.getDrawable() as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data: ByteArray = baos.toByteArray()
 
+        val uploadTask: UploadTask = FirebaseStorage.getInstance().getReference().child("images").child(imageName).putBytes(data)
+        /*
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+            Toast.makeText(this,"Upload failed",Toast.LENGTH_SHORT).show()
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            // ...
+            Log.i("URL",taskSnapshot.storage.getDownloadUrl().toString())
+
+            val intent = Intent(this, ChooseUserActivity::class.java)
+            intent.putExtra("imageUrl",taskSnapshot.storage.getDownloadUrl().toString())
+            intent.putExtra("imageName",imageName)
+            intent.putExtra("message",messageEditText?.text.toString())
+            startActivity(intent)
+        }
+        */
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+            Toast.makeText(this, "Upload Failed", Toast.LENGTH_SHORT).show()
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.    // ...
+            taskSnapshot.metadata!!.reference?.downloadUrl?.addOnCompleteListener{task ->
+                val downloadURL = task.result!!.toString()
+                Log.i ("URL", downloadURL)
+
+                val intent = Intent(this, ChooseUserActivity::class.java)
+                intent.putExtra("imageUrl",downloadURL)
+                intent.putExtra("imageName",imageName)
+                intent.putExtra("message",messageEditText?.text.toString())
+                startActivity(intent)
+            }
+        }
+    }
 
 
 
